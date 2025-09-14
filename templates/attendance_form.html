@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <title>تسجيل الحضور</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             font-family: 'Cairo', sans-serif;
@@ -15,29 +16,35 @@
             height: 100vh;
             margin: 0;
         }
+
         .container {
             background: white;
             padding: 2rem;
             border-radius: 16px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 400px;
         }
+
         h2 {
             text-align: center;
             color: #0f172a;
         }
+
         label {
             display: block;
             margin: 0.5rem 0 0.2rem;
         }
-        input, select {
+
+        input,
+        select {
             width: 100%;
             padding: 0.5rem;
             margin-bottom: 1rem;
             border-radius: 8px;
             border: 1px solid #cbd5e1;
         }
+
         button {
             width: 100%;
             padding: 0.6rem;
@@ -48,28 +55,32 @@
             font-size: 1rem;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #1e40af;
         }
+
+        .site-info {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #475569;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>تسجيل الحضور</h2>
-        <form method="POST" action="/submit">
+        <div class="site-info">
+            🏗️ الموقع الحالي: {{ site }}
+        </div>
+        <form method="POST" action="">
             <label for="name">الاسم</label>
             <input type="text" id="name" name="name" required>
 
             <label for="nid">الرقم القومي</label>
             <input type="text" id="nid" name="nid" required>
-
-            <label for="location">الموقع</label>
-            <select id="location" name="location" required>
-                <option value="">اختر الموقع</option>
-                <option value="موقع 1">موقع 1</option>
-                <option value="موقع 2">موقع 2</option>
-                <option value="موقع 3">موقع 3</option>
-            </select>
 
             <label for="job">الوظيفة</label>
             <input type="text" id="job" name="job" required>
@@ -81,4 +92,5 @@
         </form>
     </div>
 </body>
+
 </html>

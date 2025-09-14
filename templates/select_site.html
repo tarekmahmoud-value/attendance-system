@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>اختيار الموقع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: white;
+            margin: 10px 0;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #16a34a;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background: #15803d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>📂 اختر الموقع لعرض أو تعديل الحضور</h2>
+
+        <!-- زرار رفع ملف -->
+        <a href="{{ url_for('upload_file') }}">
+            <button class="upload-btn">رفع ملف جديد</button>
+        </a>
+
+        {% if sites %}
+        <ul>
+            {% for site in sites %}
+            <li>
+                <a href="{{ url_for('attendance', site=site.file) }}">{{ site.display }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>❌ لا يوجد ملفات مرفوعة حتى الآن.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
