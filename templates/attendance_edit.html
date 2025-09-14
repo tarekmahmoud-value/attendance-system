@@ -40,10 +40,24 @@
         }
 
         input {
-            width: 95%;
             padding: 0.3rem;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
+        }
+
+        /* ✅ الخانات 2 و 3 و 5 و 6 تتوسع */
+        td:nth-child(2) input,
+        td:nth-child(3) input,
+        td:nth-child(5) input,
+        td:nth-child(6) input {
+            min-width: 150px;
+            width: auto;
+        }
+
+        /* ✅ باقي الخانات حجم ثابت */
+        td:not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(5)):not(:nth-child(6)) input {
+            width: 25px;
+            text-align: center;
         }
 
         .btn {
@@ -86,7 +100,6 @@
 
 <body>
     <h2>تعديل بيانات الحضور - {{ site }}</h2>
-
     <form method="POST" id="attendanceForm">
         <table id="attendanceTable">
             <thead>
@@ -109,30 +122,31 @@
                 {% endfor %}
             </tbody>
         </table>
-
         <div style="text-align:center;">
             <button type="button" class="btn add-btn" onclick="addRow()">➕ إضافة صف جديد</button>
             <button type="submit" class="btn save-btn">💾 حفظ التعديلات</button>
             <button type="button" class="btn back-btn" onclick="history.back()">↩ رجوع</button>
         </div>
     </form>
-
     <script>
         let newRowIndex = 0;
         function addRow() {
             const table = document.getElementById("attendanceTable").getElementsByTagName('tbody')[0];
-            const headers = {{headers| tojson
-        }};
-        const row = document.createElement("tr");
-
-        headers.forEach(h => {
-            const td = document.createElement("td");
-            td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" value="">`;
-            row.appendChild(td);
-        });
-
-        table.appendChild(row);
-        newRowIndex++;
+            const headers = {{headers | tojson}};
+            const row = document.createElement("tr");
+            headers.forEach((h, i) => {
+                const td = document.createElement("td");
+                if (i === 1 || i === 2 || i === 4 || i === 5) {
+                    // ✅ الخانات 2 و 3 و 5 و 6 تتوسع
+                    td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" style="min-width:150px; width:auto;" value="">`;
+                } else {
+                    // ✅ باقي الخانات عرض ثابت
+                    td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" style="width:25px; text-align:center;" value="">`;
+                }
+                row.appendChild(td);
+            });
+            table.appendChild(row);
+            newRowIndex++;
         }
     </script>
 </body>

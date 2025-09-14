@@ -7,15 +7,19 @@ body {
 }
 
 .container {
-    max-width: 400px;
+    max-width: 1000px;
+    /* كبرت العرض عشان الجدول يبان */
     margin: 50px auto;
     background: white;
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    /* لو الجدول كبير يبان شريط تمرير */
 }
 
-h1, h2 {
+h1,
+h2 {
     text-align: center;
     color: #0f172a;
 }
@@ -30,7 +34,8 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input,
+select {
     padding: 0.5rem;
     border-radius: 8px;
     border: 1px solid #cbd5e1;
@@ -66,4 +71,37 @@ a.button-link {
 
 a.button-link:hover {
     background: #1e40af;
+}
+
+/* ✅ تنسيقات الجدول */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto;
+    /* الأعمدة تتوسع حسب المحتوى */
+}
+
+th,
+td {
+    border: 1px solid #cbd5e1;
+    padding: 8px 12px;
+    text-align: center;
+    white-space: nowrap;
+    /* يمنع نزول الكلام لسطر جديد */
+}
+
+th {
+    background-color: #2563eb;
+    color: white;
+}
+
+/* ✅ تعديل عرض الخانات ليتوسع حسب المحتوى */
+td input {
+    min-width: 120px;
+    /* أقل عرض */
+    width: auto;
+    /* يتوسع على قد الكلام */
+    max-width: 100%;
+    /* مايكسرش الجدول */
+    box-sizing: border-box;
 }
