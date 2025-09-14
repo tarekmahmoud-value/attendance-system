@@ -15,7 +15,8 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 # دالة التحقق من الامتداد
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit(
+        '.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # ----------------------------------
@@ -23,7 +24,9 @@ def allowed_file(filename):
 # ----------------------------------
 @app.route('/')
 def select_site():
-    files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(('.xlsx', '.xls'))]
+    files = [
+        f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(('.xlsx', '.xls'))
+    ]
     sites = []
     for f in files:
         # نشيل الامتداد
@@ -36,7 +39,7 @@ def select_site():
 
 
 # ----------------------------------
-# رفع ملف جديد
+# رفع ملف جديد / استبدال القديم
 # ----------------------------------
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -51,7 +54,10 @@ def upload_file():
 
         if file and allowed_file(file.filename):
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+
+            # استبدال الملف لو موجود
             file.save(filepath)
+
             return redirect(url_for('select_site'))
         else:
             return "❌ مسموح فقط برفع ملفات Excel (.xlsx أو .xls)"
@@ -80,19 +86,36 @@ def attendance(site):
     df = df.fillna("")  # استبدال NaN بفاضي
 
     if request.method == 'POST':
-        # تحديث البيانات من الفورم
         updated_data = []
+
+        # تحديث البيانات القديمة
         for i in range(len(df)):
             row = {}
             for h in df.columns:
                 row[h] = request.form.get(f"{h}_{i}", "")
             updated_data.append(row)
 
+        # إضافة الصفوف الجديدة (لو فيها بيانات)
+        new_index = 0
+        while True:
+            row = {}
+            empty_row = True
+            for h in df.columns:
+                val = request.form.get(f"{h}_new{new_index}", "")
+                if val.strip():  # لو فيه أي قيمة
+                    empty_row = False
+                row[h] = val
+            if not empty_row:
+                updated_data.append(row)
+                new_index += 1
+            else:
+                break
+
         # تحويلها DataFrame وحفظها
-        new_df = pd.DataFrame(updated_data)
+        new_df = pd.DataFrame(updated_data, columns=df.columns)
         new_df.to_excel(filepath, index=False)
 
-        return f"✅ تم حفظ التعديلات للموقع: {site} في {filename}"
+        return redirect(url_for('attendance', site=site))
 
     headers = df.columns.tolist()
     data = df.to_dict(orient="records")

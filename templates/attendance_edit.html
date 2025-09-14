@@ -46,19 +46,40 @@
             border-radius: 6px;
         }
 
-        button {
-            margin-top: 1rem;
+        .btn {
+            margin: 0.5rem;
             padding: 0.6rem 1.2rem;
-            background-color: #2563eb;
-            color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
         }
 
-        button:hover {
+        .save-btn {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .save-btn:hover {
             background-color: #1e40af;
+        }
+
+        .add-btn {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background-color: #15803d;
+        }
+
+        .back-btn {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background-color: #374151;
         }
     </style>
 </head>
@@ -66,8 +87,8 @@
 <body>
     <h2>تعديل بيانات الحضور - {{ site }}</h2>
 
-    <form method="POST">
-        <table>
+    <form method="POST" id="attendanceForm">
+        <table id="attendanceTable">
             <thead>
                 <tr>
                     {% for h in headers %}
@@ -88,10 +109,32 @@
                 {% endfor %}
             </tbody>
         </table>
+
         <div style="text-align:center;">
-            <button type="submit">💾 حفظ التعديلات</button>
+            <button type="button" class="btn add-btn" onclick="addRow()">➕ إضافة صف جديد</button>
+            <button type="submit" class="btn save-btn">💾 حفظ التعديلات</button>
+            <button type="button" class="btn back-btn" onclick="history.back()">↩ رجوع</button>
         </div>
     </form>
+
+    <script>
+        let newRowIndex = 0;
+        function addRow() {
+            const table = document.getElementById("attendanceTable").getElementsByTagName('tbody')[0];
+            const headers = {{headers| tojson
+        }};
+        const row = document.createElement("tr");
+
+        headers.forEach(h => {
+            const td = document.createElement("td");
+            td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" value="">`;
+            row.appendChild(td);
+        });
+
+        table.appendChild(row);
+        newRowIndex++;
+        }
+    </script>
 </body>
 
 </html>
