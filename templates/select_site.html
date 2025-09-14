@@ -15,31 +15,36 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: auto;
         }
 
-        ul {
-            list-style: none;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 3 أعمدة */
+            gap: 20px;
+            /* مسافة بين الكروت */
             padding: 0;
         }
 
-        li {
+        .card {
             background: white;
-            margin: 10px 0;
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
-            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(0.9);
         }
 
         a {
             text-decoration: none;
             color: #2563eb;
             font-weight: bold;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            font-size: 0.9rem;
         }
 
         .upload-btn {
@@ -69,13 +74,13 @@
         </a>
 
         {% if sites %}
-        <ul>
+        <div class="grid">
             {% for site in sites %}
-            <li>
+            <div class="card">
                 <a href="{{ url_for('attendance', site=site.file) }}">{{ site.display }}</a>
-            </li>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
         {% else %}
         <p>❌ لا يوجد ملفات مرفوعة حتى الآن.</p>
         {% endif %}

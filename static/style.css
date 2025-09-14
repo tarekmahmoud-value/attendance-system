@@ -105,3 +105,48 @@ td input {
     /* مايكسرش الجدول */
     box-sizing: border-box;
 }
+
+/* صفحة تسجيل الدخول */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 1.5rem;
+    color: #2563eb;
+}
+
+.login-container .error {
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+}
+
+.login-container button {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-container button:hover {
+    background: #1e40af;
+}
