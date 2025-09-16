@@ -1,12 +1,33 @@
 [
-  {
-    "username": "admin",
-    "password": "1234",
-    "sites": ["site1", "site2"]
-  },
-  {
-    "username": "mohamed",
-    "password": "5678",
-    "sites": ["site3"]
-  }
+    {
+        "username": "admin",
+        "password": "12345",
+        "sites": [
+            "site1",
+            "site2"
+        ],
+        "last_login": "2025-09-16 06:36:27"
+    },
+    {
+        "username": "mohamed",
+        "password": "56789",
+        "sites": [
+            "المخازن الاستراتيجية .xlsx",
+            "مبنى العتبه.xlsx",
+            "المخازن الاستراتيجية (مشالات).xlsx",
+            "المطابع البريدية (مشالات).xlsx"
+        ],
+        "last_login": "2025-09-16 06:19:06"
+    },
+    {
+        "username": "shdw",
+        "password": "12345",
+        "sites": [
+            "الالفى.xlsx",
+            "مبنى العتبه.xlsx",
+            "المطابع البريدية (مشالات).xlsx"
+        ],
+        "last_login": "2025-09-16 06:41:13",
+        "completion": 0
+    }
 ]

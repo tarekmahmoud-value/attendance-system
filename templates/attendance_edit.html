@@ -4,150 +4,177 @@
 <head>
     <meta charset="UTF-8">
     <title>تعديل الحضور - {{ site }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #f1f5f9;
-            padding: 2rem;
             margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 95%;
+            margin: 20px auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
         }
 
         h2 {
             text-align: center;
-            color: #0f172a;
+            margin-bottom: 1rem;
         }
 
         table {
-            width: 100%;
             border-collapse: collapse;
-            margin: 1rem 0;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
+            width: 100%;
+            table-layout: auto;
+            /* بدل fixed */
         }
 
         th,
         td {
             border: 1px solid #cbd5e1;
-            padding: 0.5rem;
+            padding: 6px;
             text-align: center;
         }
 
         th {
-            background: #2563eb;
+            background-color: #2563eb;
             color: white;
         }
 
-        input {
-            padding: 0.3rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
+        tr:nth-child(even) {
+            background-color: #f0f2f5;
         }
 
-        /* ✅ الخانات 2 و 3 و 5 و 6 تتوسع */
+        td input {
+            box-sizing: border-box;
+            padding: 4px;
+        }
+
+        /* الأعمدة 2،3،5،6 تتوسع حسب المحتوى */
         td:nth-child(2) input,
         td:nth-child(3) input,
         td:nth-child(5) input,
         td:nth-child(6) input {
             min-width: 150px;
+            max-width: 100%;
             width: auto;
         }
 
-        /* ✅ باقي الخانات حجم ثابت */
+        /* باقي الأعمدة عرض ثابت */
         td:not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(5)):not(:nth-child(6)) input {
-            width: 25px;
-            text-align: center;
+            width: 0%;
         }
 
-        .btn {
-            margin: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .save-btn {
-            background-color: #2563eb;
-            color: white;
-        }
-
-        .save-btn:hover {
-            background-color: #1e40af;
-        }
-
-        .add-btn {
+        button {
             background-color: #16a34a;
             color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
         }
 
-        .add-btn:hover {
+        button:hover {
             background-color: #15803d;
         }
 
-        .back-btn {
-            background-color: #6b7280;
+        .button-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 0.7rem 1.5rem;
+            background: #2563eb;
             color: white;
+            border-radius: 8px;
+            text-decoration: none;
         }
 
-        .back-btn:hover {
-            background-color: #374151;
+        .button-link:hover {
+            background: #1e40af;
+        }
+
+        @media (max-width: 768px) {
+            td input {
+                font-size: 0.9rem;
+                padding: 3px;
+            }
+
+            button,
+            .button-link {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h2>تعديل بيانات الحضور - {{ site }}</h2>
-    <form method="POST" id="attendanceForm">
-        <table id="attendanceTable">
-            <thead>
-                <tr>
-                    {% for h in headers %}
-                    <th>{{ h }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                {% set outer_index = loop.index0 %}
-                <tr>
-                    {% for h in headers %}
-                    <td>
-                        <input type="text" name="{{ h }}_{{ outer_index }}" value="{{ row[h] }}">
-                    </td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="container">
+        <h2>تعديل بيانات الحضور - {{ site }}</h2>
+
+        <form method="POST">
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for header in headers %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        {% set row_index = loop.index0 %}
+                        <tr>
+                            {% for header in headers %}
+                            <td>
+                                <input type="text" name="{{ header }}_{{ row_index }}" value="{{ row[header] }}">
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" id="addRowBtn">➕ إضافة صف جديد</button>
+            <button type="submit">💾 حفظ التغييرات</button>
+        </form>
+
         <div style="text-align:center;">
-            <button type="button" class="btn add-btn" onclick="addRow()">➕ إضافة صف جديد</button>
-            <button type="submit" class="btn save-btn">💾 حفظ التعديلات</button>
-            <button type="button" class="btn back-btn" onclick="history.back()">↩ رجوع</button>
+            <a href="{{ url_for('select_site') }}" class="button-link">العودة للصفحة الرئيسية</a>
         </div>
-    </form>
+    </div>
+
     <script>
+        const addRowBtn = document.getElementById("addRowBtn");
+        const tableBody = document.querySelector("table tbody");
         let newRowIndex = 0;
-        function addRow() {
-            const table = document.getElementById("attendanceTable").getElementsByTagName('tbody')[0];
-            const headers = {{headers | tojson}};
-            const row = document.createElement("tr");
+        const headers = {{headers| tojson | safe }};
+
+        addRowBtn.addEventListener("click", () => {
+            const tr = document.createElement("tr");
             headers.forEach((h, i) => {
                 const td = document.createElement("td");
-                if (i === 1 || i === 2 || i === 4 || i === 5) {
-                    // ✅ الخانات 2 و 3 و 5 و 6 تتوسع
+                // الأعمدة 2،3،5،6 تتوسع، الباقي 20px
+                if ([1, 2, 4, 5].includes(i)) {
                     td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" style="min-width:150px; width:auto;" value="">`;
                 } else {
-                    // ✅ باقي الخانات عرض ثابت
-                    td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" style="width:25px; text-align:center;" value="">`;
+                    td.innerHTML = `<input type="text" name="${h}_new${newRowIndex}" style="width:20px;" value="">`;
                 }
-                row.appendChild(td);
+                tr.appendChild(td);
             });
-            table.appendChild(row);
+            tableBody.appendChild(tr);
             newRowIndex++;
-        }
+        });
     </script>
 </body>
 

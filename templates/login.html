@@ -5,22 +5,56 @@
     <meta charset="UTF-8">
     <title>تسجيل الدخول</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login-style.css') }}">
 </head>
 
 <body>
-    <div class="login-container">
-        <h2>🔑 تسجيل الدخول</h2>
+    <!-- Ring Effect Container -->
+    <div class="ring">
+        <i style="--clr:#00ff0a;"></i>
+        <i style="--clr:#ff0057;"></i>
+        <i style="--clr:#fffd44;"></i>
 
-        {% if error %}
-        <p class="error">{{ error }}</p>
-        {% endif %}
+        <!-- Login Box -->
+        <div class="login-box">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+            <label for="tab-1" class="tab">تسجيل الدخول</label>
+            
 
-        <form method="POST">
-            <input type="text" name="username" placeholder="اسم المستخدم" required>
-            <input type="password" name="password" placeholder="كلمة المرور" required>
-            <button type="submit">دخول</button>
-        </form>
+            <div class="login-form">
+                <!-- تسجيل الدخول -->
+                <div class="sign-in-htm">
+                    {% if error %}
+                    <p class="error">{{ error }}</p>
+                    {% endif %}
+                    <form method="POST">
+                        <div class="group">
+                            <label for="user" class="label">اسم المستخدم</label>
+                            <input id="user" type="text" name="username" class="input" required>
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">كلمة المرور</label>
+                            <input id="pass" type="password" name="password" class="input" required>
+                        </div>
+                        <div class="group check-wrap">
+                            <input id="check" type="checkbox" class="check" checked>
+                            <label for="check"><span class="icon"></span> تذكرني</label>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="دخول">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <a href="#forgot">نسيت كلمة المرور؟</a>
+                        </div>
+                    </form>
+                </div>
+
+                
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

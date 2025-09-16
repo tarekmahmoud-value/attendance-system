@@ -1,0 +1,323 @@
+<!-- templates/admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>لوحة تحكم الأدمن</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary-1: #2563eb;
+      --primary-2: #1e40af;
+      --accent: #ffcb6b;
+      --card-bg: #ffffff;
+      --muted: #6b7280;
+      --header-bg: #000000;
+    }
+
+    body{
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827);
+      color: #0f172a;
+      min-height: 100vh;
+      padding: 30px 16px;
+    }
+
+    .dashboard-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+      padding: 20px;
+    }
+
+    h2.page-title{
+      text-align: center;
+      margin-bottom: 18px;
+      color: var(--primary-2);
+      font-weight: 700;
+    }
+
+    .nav-tabs .nav-link {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .nav-tabs .nav-link.active {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    table thead th {
+      background: var(--header-bg) !important;
+      color: #fff;
+      vertical-align: middle;
+    }
+
+    table.table td, table.table th {
+      vertical-align: middle;
+    }
+
+    .progress {
+      height: 18px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress .progress-bar {
+      line-height: 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .badge-sites {
+      background: rgba(37,99,235,0.12);
+      color: var(--primary-1);
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-left: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .btn-custom {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      box-shadow: 0 6px 18px rgba(30,64,175,0.18);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #e6eefc;
+      color: var(--primary-2);
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
+
+    .action-btns button { margin-left: 6px; }
+    .modal-content { direction: rtl; font-family: 'Cairo', sans-serif; }
+
+    @media (max-width: 768px){
+      .dashboard-wrap { padding: 14px; }
+      .badge-sites { font-size: 0.85rem; padding: 5px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrap">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="page-title mb-0">لوحة تحكم الأدمن</h2>
+      <a href="{{ url_for('select_site') }}" class="btn btn-outline">⬅️ رجوع للقائمة الرئيسية</a>
+    </div>
+
+    <!-- flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container mb-3">
+          {% for cat, msg in messages %}
+            <div class="alert alert-{{ 'success' if cat=='success' else 'danger' if cat=='danger' else 'warning' }}" role="alert">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <ul class="nav nav-tabs justify-content-center mb-3" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">📊 لوحة المتابعة</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button" role="tab">👥 إدارة الحسابات</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+
+      <!-- Dashboard Tab -->
+      <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th>اسم المستخدم</th>
+                <th>آخر تسجيل دخول</th>
+                <th>نسبة استكمال البيانات</th>
+                <th>المواقع المرتبطة</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in users %}
+              <tr>
+                <td class="fw-bold">{{ u.username }}</td>
+                <td>{{ u.last_login or '-' }}</td>
+                <td style="min-width:220px;">
+                  {% set pct = u.completion_percent|default(0) %}
+                  <div class="progress">
+                    <div class="progress-bar {% if pct >= 75 %}bg-success{% elif pct >= 40 %}bg-warning{% else %}bg-danger{% endif %}" 
+                         role="progressbar" style="width: {{ pct }}%;">{{ pct }}%</div>
+                  </div>
+                </td>
+                <td>
+                  {% if u.sites %}
+                    {% for s in u.sites %}
+                      <span class="badge-sites d-inline-flex align-items-center">
+                        {{ s }}
+                        <form method="POST" action="{{ url_for('delete_site', username=u.username, site=s) }}" style="display:inline;" onsubmit="return confirm('هل تريد حذف هذا الموقع من المستخدم؟');">
+                          <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1">❌</button>
+                        </form>
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="text-muted">لا يوجد</span>
+                  {% endif %}
+                </td>
+                <td class="action-btns">
+                  <button class="btn btn-sm btn-outline" data-username="{{ u.username }}" onclick="openAddSiteModal(this)">➕ إضافة موقع</button>
+                  <a href="{{ url_for('view_user', username=u.username) }}" class="btn btn-sm btn-custom">عرض</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Accounts Tab -->
+      <div class="tab-pane fade" id="accounts" role="tabpanel">
+
+        <!-- زر إضافة مستخدم جديد -->
+        <div class="mb-3 text-end">
+          <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#addUserModal">➕ إضافة مستخدم جديد</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th>اسم المستخدم</th>
+                <th>كلمة المرور (قابلة للتعديل)</th>
+                <th>المواقع</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in users %}
+              <tr>
+                <td class="fw-bold">{{ u.username }}</td>
+                <td>
+                  <form method="POST" action="{{ url_for('update_password') }}" class="d-flex gap-2 align-items-center">
+                    <input type="hidden" name="username" value="{{ u.username }}">
+                    <input type="text" name="new_password" class="form-control form-control-sm" value="{{ u.password }}" style="max-width:220px;">
+                    <button type="submit" class="btn btn-sm btn-outline">حفظ</button>
+                  </form>
+                </td>
+                <td>
+                  {% if u.sites %}
+                    {% for s in u.sites %}
+                      <span class="badge-sites d-inline-flex align-items-center">
+                        {{ s }}
+                        <form method="POST" action="{{ url_for('delete_site', username=u.username, site=s) }}" style="display:inline;" onsubmit="return confirm('هل تريد حذف هذا الموقع من المستخدم؟');">
+                          <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1">❌</button>
+                        </form>
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="text-muted">لا يوجد</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-custom" data-username="{{ u.username }}" onclick="openAddSiteModal(this)">➕ إضافة موقع</button>
+                  <a href="{{ url_for('delete_user', username=u.username) }}" class="btn btn-sm btn-outline" onclick="return confirm('هل أنت متأكد من حذف المستخدم؟');">حذف</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Add Site Modal -->
+    <div class="modal fade" id="addSiteModal" tabindex="-1" aria-labelledby="addSiteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <form id="addSiteForm" method="POST" action="{{ url_for('add_site') }}" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addSiteModalLabel">إضافة موقع للمستخدم</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="username" id="modal_username" value="">
+            <div class="mb-3">
+              <label class="form-label">اختر الموقع من الملفات المرفوعة</label>
+              <select name="site_file" id="modal_site_select" class="form-select" required>
+                <option value="">-- اختر ملف --</option>
+                {% for f in uploads %}
+                  <option value="{{ f }}">{{ f }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">تفاصيل إضافية (اختياري)</label>
+              <textarea class="form-control" name="details" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-custom">إضافة</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <form id="addUserForm" method="POST" action="{{ url_for('add_user') }}" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">➕ إضافة مستخدم جديد</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">اسم المستخدم</label>
+              <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">كلمة المرور</label>
+              <input type="text" name="password" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-custom">إضافة</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function openAddSiteModal(btn){
+      const username = btn.getAttribute('data-username');
+      document.getElementById('modal_username').value = username;
+      document.getElementById('addSiteModalLabel').innerText = `إضافة موقع للمستخدم: ${username}`;
+      const sel = document.getElementById('modal_site_select');
+      if (sel && sel.options.length > 1) sel.selectedIndex = 0;
+      const addSiteModal = new bootstrap.Modal(document.getElementById('addSiteModal'));
+      addSiteModal.show();
+    }
+  </script>
+</body>
+</html>

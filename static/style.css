@@ -1,27 +1,27 @@
 body {
     font-family: 'Cairo', sans-serif;
-    background-color: #f8fafc;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
     margin: 0;
     padding: 0;
     direction: rtl;
+    color: #111827; /* النص الأساسي أسود رمادي */
 }
 
+/* الحاوية الأساسية */
 .container {
     max-width: 1000px;
-    /* كبرت العرض عشان الجدول يبان */
     margin: 50px auto;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     overflow-x: auto;
-    /* لو الجدول كبير يبان شريط تمرير */
 }
 
 h1,
 h2 {
     text-align: center;
-    color: #0f172a;
+    color: #111827; /* أسود */
 }
 
 form {
@@ -32,6 +32,7 @@ form {
 label {
     margin-top: 1rem;
     font-weight: bold;
+    color: #111827;
 }
 
 input,
@@ -40,37 +41,51 @@ select {
     border-radius: 8px;
     border: 1px solid #cbd5e1;
     margin-top: 0.3rem;
+    background: #ffffff;
+    color: #111827;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 5px #2563eb;
 }
 
 button {
     margin-top: 1.5rem;
-    background-color: #2563eb;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
     color: white;
     padding: 0.7rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
 }
 
 button:hover {
-    background-color: #1e40af;
+    background: linear-gradient(90deg, #1e40af, #2563eb);
+    transform: scale(1.05);
 }
 
 a.button-link {
     display: block;
     margin: 1rem auto;
     padding: 1rem;
-    background: #2563eb;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
     color: white;
     width: 200px;
     border-radius: 8px;
     text-decoration: none;
     text-align: center;
+    transition: 0.3s ease;
 }
 
 a.button-link:hover {
-    background: #1e40af;
+    background: linear-gradient(90deg, #1e40af, #2563eb);
+    transform: scale(1.05);
 }
 
 /* ✅ تنسيقات الجدول */
@@ -78,7 +93,9 @@ table {
     border-collapse: collapse;
     width: 100%;
     table-layout: auto;
-    /* الأعمدة تتوسع حسب المحتوى */
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 th,
@@ -87,66 +104,77 @@ td {
     padding: 8px 12px;
     text-align: center;
     white-space: nowrap;
-    /* يمنع نزول الكلام لسطر جديد */
+    color: #111827; /* النصوص سوداء */
 }
 
 th {
-    background-color: #2563eb;
-    color: white;
+    background: #000000; /* هيدر أسود */
+    color: #ffffff;      /* نص أبيض */
 }
 
-/* ✅ تعديل عرض الخانات ليتوسع حسب المحتوى */
+/* ✅ تعديل عرض الخانات */
 td input {
-    min-width: 120px;
-    /* أقل عرض */
+    min-width: 50px;
     width: auto;
-    /* يتوسع على قد الكلام */
     max-width: 100%;
-    /* مايكسرش الجدول */
     box-sizing: border-box;
+    background: #f9fafb;
+    border: 1px solid #cbd5e1;
+    color: #111827;
 }
 
 /* صفحة تسجيل الدخول */
 .login-container {
     max-width: 400px;
     margin: 100px auto;
-    background: white;
+    background: #ffffff;
     padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     text-align: center;
+    color: #111827;
 }
 
 .login-container h2 {
     margin-bottom: 1.5rem;
-    color: #2563eb;
+    color: #111827;
 }
 
 .login-container .error {
-    color: red;
+    color: #dc2626; /* أحمر */
     margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .login-container input {
     width: 100%;
     padding: 10px;
     margin: 0.5rem 0;
-    border: 1px solid #ccc;
+    border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-family: 'Cairo', sans-serif;
+    background: #f9fafb;
+    color: #111827;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 5px #2563eb;
 }
 
 .login-container button {
     width: 100%;
-    background: #2563eb;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
     color: white;
     padding: 0.8rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.3s ease;
 }
 
 .login-container button:hover {
-    background: #1e40af;
+    background: linear-gradient(90deg, #1e40af, #2563eb);
+    transform: scale(1.05);
 }
